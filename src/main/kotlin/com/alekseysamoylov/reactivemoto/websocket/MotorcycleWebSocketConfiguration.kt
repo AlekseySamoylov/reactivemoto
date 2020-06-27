@@ -2,7 +2,7 @@ package com.alekseysamoylov.reactivemoto.websocket
 
 import com.alekseysamoylov.reactivemoto.MakerRequest
 import com.alekseysamoylov.reactivemoto.MotorcycleRequest
-import com.alekseysamoylov.reactivemoto.search.MotoSearchService
+import com.alekseysamoylov.reactivemoto.service.MotoSearchService
 import com.google.gson.Gson
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
