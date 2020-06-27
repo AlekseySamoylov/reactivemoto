@@ -8,7 +8,7 @@ data class Maker(
 
 data class Motorcycle(
     val id: Long,
-    private val maker: Maker,
+    val maker: Maker,
     val name: String,
     val year: Int
 )

@@ -2,17 +2,13 @@ package com.alekseysamoylov.reactivemoto.websocket
 
 import com.alekseysamoylov.reactivemoto.MakerRequest
 import com.alekseysamoylov.reactivemoto.MotorcycleRequest
-import com.alekseysamoylov.reactivemoto.repository.DefaultMotorcycleRepository
 import com.alekseysamoylov.reactivemoto.search.MotoSearchService
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.Gson
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
 import org.springframework.web.reactive.socket.WebSocketHandler
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
-import reactor.core.publisher.Flux
-import reactor.core.publisher.SynchronousSink
 
 
 @Configuration
@@ -26,16 +22,7 @@ class MotorcycleWebSocketConfiguration {
     ), 10)
   }
 
-    val jsonObjectMapper = ObjectMapper()
-
-  val eventFlux = Flux.generate { sink: SynchronousSink<String?> ->
-    val event = DefaultMotorcycleRepository.aprilia
-    try {
-      sink.next(jsonObjectMapper.writeValueAsString(event))
-    } catch (e: JsonProcessingException) {
-      sink.error(e)
-    }
-  }
+  val jsonObjectMapper = Gson()
 
   @Bean
   fun motorcycleWebSocketHandler(motoSearchService: MotoSearchService): WebSocketHandler {
@@ -44,7 +31,7 @@ class MotorcycleWebSocketConfiguration {
       val searchMotorcycleModelString = receive.map { it.payloadAsText }
       val requestFlux = searchMotorcycleModelString.map { MotorcycleRequest(it) }
       val motorcycleModelResponseFlux = requestFlux.flatMap { motoSearchService.findMoto(it) }
-      val map = motorcycleModelResponseFlux.map { jsonObjectMapper.writeValueAsString(it) }
+      val map = motorcycleModelResponseFlux.map { jsonObjectMapper.toJson(it) }
       val webSocketMessageFlux = map.map { session.textMessage(it) }
       session.send(webSocketMessageFlux)
     }

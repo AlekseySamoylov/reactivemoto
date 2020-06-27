@@ -1,21 +1,19 @@
 package com.alekseysamoylov.reactivemoto
 
-import com.fasterxml.jackson.databind.type.SimpleType
+import com.alekseysamoylov.reactivemoto.repository.TestMotorcycleRepository
+import com.google.gson.Gson
+import org.assertj.core.api.Assertions.assertThat
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.messaging.simp.stomp.StompCommand
-import org.springframework.messaging.simp.stomp.StompHeaders
-import org.springframework.messaging.simp.stomp.StompSession
-import org.springframework.messaging.simp.stomp.StompSessionHandler
-import org.springframework.web.socket.messaging.WebSocketStompClient
-import java.lang.reflect.Type
 import java.net.URI
 import java.net.URISyntaxException
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
+@Tag("integration")
 class WebsocketComponentTest {
   private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -29,6 +27,9 @@ class WebsocketComponentTest {
       return
     }
 
+    val countDownLatch = CountDownLatch(4)
+    val jsonObjectMapper = Gson()
+    val motorcycles = mutableListOf<Motorcycle>()
     val mWebSocketClient = object : WebSocketClient(uri) {
       override fun onOpen(serverHandshake: ServerHandshake) {
         log.info("Websocket >>>> Opened")
@@ -37,6 +38,9 @@ class WebsocketComponentTest {
 
       override fun onMessage(s: String) {
         log.info("Message >>>> {}", s)
+        val motorcycle = jsonObjectMapper.fromJson<Motorcycle>(s, Motorcycle::class.java)
+        motorcycles.add(motorcycle)
+        countDownLatch.countDown()
       }
 
       override fun onClose(i: Int, s: String, b: Boolean) {
@@ -49,7 +53,11 @@ class WebsocketComponentTest {
     }
     mWebSocketClient.connect()
 
-    TimeUnit.SECONDS.sleep(20)
+    countDownLatch.await(15, TimeUnit.SECONDS)
+    assertThat(countDownLatch.count).isEqualTo(0)
+    assertThat(motorcycles).containsExactly(TestMotorcycleRepository.aprilia,
+        TestMotorcycleRepository.bmw, TestMotorcycleRepository.ducati, TestMotorcycleRepository.yamaha)
+    log.info("moto {}", motorcycles)
     mWebSocketClient.close()
 
   }

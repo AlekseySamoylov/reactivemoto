@@ -21,7 +21,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework:spring-websocket")
   implementation("org.java-websocket:Java-WebSocket:1.3.0")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+  implementation("com.google.code.gson:gson:2.8.6")
   implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
   implementation("org.apache.kafka:kafka-streams")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -38,7 +38,9 @@ dependencies {
 }
 
 tasks.withType<Test> {
-  useJUnitPlatform()
+  useJUnitPlatform() {
+    excludeTags("integration")
+  }
 }
 
 tasks.withType<KotlinCompile> {
