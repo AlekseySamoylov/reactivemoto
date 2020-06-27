@@ -1,0 +1,44 @@
+{
+  "settings" : {
+    "number_of_shards" : 1
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "long"
+      },
+      "maker": {
+        "type": "long"
+      },
+      "name": {
+        "type": "text"
+      },
+      "year": {
+        "type": "integer"
+      }
+    }
+  }
+}
+
+
+{
+  "settings" : {
+    "number_of_shards" : 1
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "long"
+      },
+      "maker": {
+        "type": "text"
+      },
+      "name": {
+        "type": "text"
+      },
+      "year": {
+        "type": "integer"
+      }
+    }
+  }
+}

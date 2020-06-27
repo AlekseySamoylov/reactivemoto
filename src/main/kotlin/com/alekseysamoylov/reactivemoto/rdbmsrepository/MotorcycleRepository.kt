@@ -1,4 +1,4 @@
-package com.alekseysamoylov.reactivemoto.repository
+package com.alekseysamoylov.reactivemoto.rdbmsrepository
 
 import com.alekseysamoylov.reactivemoto.Motorcycle
 import org.springframework.stereotype.Repository
@@ -10,6 +10,7 @@ interface MotorcycleRepository {
   fun findAll(): Flux<Motorcycle>
 }
 
+@Deprecated("use Reactive")
 @Repository
 class DefaultMotorcycleRepository: MotorcycleRepository {
   companion object {

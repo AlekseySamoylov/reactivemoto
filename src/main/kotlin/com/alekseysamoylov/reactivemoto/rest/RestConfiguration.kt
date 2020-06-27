@@ -26,6 +26,11 @@ class RestConfiguration {
               motoSearchService.findMoto(MotorcycleRequest(modelName = it.pathVariable("name"))), Motorcycle::class.java
           )
         }
+        .GET("/api/searchmoto/{name}") {
+          ServerResponse.ok().contentType(MediaType.TEXT_EVENT_STREAM).body(
+              motoSearchService.elasticFindMotoByName(it.pathVariable("name")), Motorcycle::class.java
+          )
+        }
         .build()
   }
 }

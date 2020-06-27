@@ -1,6 +1,7 @@
 package com.alekseysamoylov.reactivemoto
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.elasticsearch.annotations.Document
 import org.springframework.data.relational.core.mapping.Table
 
 @Table
@@ -19,6 +20,15 @@ data class Motorcycle(
     val name: String = "",
     val year: Int = 0,
     var makerId: Long? = null
+)
+
+@Document(indexName = "sample", type = "motorcycle")
+data class SearchableMotorcycle(
+    @Id
+    var id: String? = "",
+    var maker: String = "",
+    val name: String = "",
+    val year: Int = 0
 )
 
 data class MotorcycleRequest(val modelName: String = "", val makerName: String = "")

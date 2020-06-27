@@ -1,4 +1,4 @@
-package com.alekseysamoylov.reactivemoto.repository
+package com.alekseysamoylov.reactivemoto.rdbmsrepository
 
 import com.alekseysamoylov.reactivemoto.Maker
 import com.alekseysamoylov.reactivemoto.Motorcycle

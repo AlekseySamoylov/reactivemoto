@@ -1,6 +1,6 @@
 package com.alekseysamoylov.reactivemoto
 
-import com.alekseysamoylov.reactivemoto.repository.TestMotorcycleRepository
+import com.alekseysamoylov.reactivemoto.rdbmsrepository.TestMotorcycleRepository
 import com.google.gson.Gson
 import org.assertj.core.api.Assertions.assertThat
 import org.java_websocket.client.WebSocketClient
